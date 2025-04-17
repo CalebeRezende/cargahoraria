@@ -65,7 +65,7 @@
       const chPresencial = parseFloat(document.getElementById('presencial').value) || 0;
       const titulacao = document.getElementById('titulacao').value;
 
-      const valorHora = titulacao === 'doutorado' ? 150 : 100;
+      const valorHora = titulacao === 'doutorado' ? 100 : 80;
 
       // Assíncrono: a cada 15h → R$6.000
       const valorAssincrono = Math.floor(chAssincrona / 15) * 6000;
