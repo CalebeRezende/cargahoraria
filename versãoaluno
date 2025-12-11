@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Carga Horária por disciplina</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    label, select, input {
+      margin-top: 10px;
+      display: block;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculadora de Folha de Pagamento</h1>
+
+  <label>CH Assíncrona (h):</label>
+  <input type="number" id="assincrona" value="0">
+
+  <label>CH Síncrona (h-aula de 45 min):</label>
+  <input type="number" id="sincrona" value="0">
+
+  <label>CH Presencial (h-aula de 45 min):</label>
+  <input type="number" id="presencial" value="0">
+
+  <label>Titulação:</label>
+  <select id="titulacao">
+    <option value="mestrado">Mestrado</option>
+    <option value="doutorado">Doutorado</option>
+  </select>
+
+  <button onclick="calcularPagamento()">Calcular</button>
+
+  <div class="resultado" id="resultado" style="display: none;">
+    <p><strong>Valor Assíncrono:</strong> R$ <span id="vAssincrono"></span></p>
+    <p><strong>Valor Síncrono:</strong> R$ <span id="vSincrono"></span></p>
+    <p><strong>Valor Presencial:</strong> R$ <span id="vPresencial"></span></p>
+    <p><strong>Total a Receber:</strong> R$ <span id="total"></span></p>
+    <p><strong>Número de Meses:</strong> 4 (pagamento a cada 4,5 semanas)</p>
+    <p><strong>Valor por Mês:</strong> R$ <span id="mensal"></span></p>
+  </div>
+
+  <script>
+    function calcularPagamento() {
+
+      // Entrada do usuário (horas-aula de 45 min)
+      const chAssincrona = parseFloat(document.getElementById('assincrona').value) || 0;
+      const chSincronaAula = parseFloat(document.getElementById('sincrona').value) || 0;
+      const chPresencialAula = parseFloat(document.getElementById('presencial').value) || 0;
+      const titulacao = document.getElementById('titulacao').value;
+
+      // Conversão: 45 min → 60 min
+      const fatorConversao = 0.75;
+      const chSincronaHora = chSincronaAula * fatorConversao;
+      const chPresencialHora = chPresencialAula * fatorConversao;
+
+      // Valores por hora (professor)
+      const valorHora = titulacao === 'doutorado' ? 150 : 100;
+
+      // Assíncrono: a cada 15h → R$ 6.000
+      const valorAssincrono = Math.floor(chAssincrona / 15) * 6000;
+
+      // Síncrono e Presencial já em horas reais
+      const valorSincrono = chSincronaHora * valorHora;
+      const valorPresencial = chPresencialHora * valorHora;
+
+      // Soma total
+      const total = valorAssincrono + valorSincrono + valorPresencial;
+      const mensal = total / 4;
+
+      // Exibir valores
+      document.getElementById('vAssincrono').textContent = valorAssincrono.toFixed(2);
+      document.getElementById('vSincrono').textContent = valorSincrono.toFixed(2);
+      document.getElementById('vPresencial').textContent = valorPresencial.toFixed(2);
+      document.getElementById('total').textContent = total.toFixed(2);
+      document.getElementById('mensal').textContent = mensal.toFixed(2);
+
+      document.getElementById('resultado').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
